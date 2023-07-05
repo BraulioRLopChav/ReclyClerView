@@ -1,16 +1,16 @@
 package com.example.listviewperso;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.SearchView;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -21,27 +21,28 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fbtnAgregar;
     private Aplicacion app;
     private Alumno alumno;
-    private int posicion = -1;
-    private AdapterAlumno adaptadorAlumnos;
+    private int posicion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Aplicacion app = (Aplicacion) getApplication();
-        recyclerView = (RecyclerView) findViewById(R.id.recId);
-        adaptadorAlumnos = app.getAdaptador();
-        recyclerView.setAdapter(adaptadorAlumnos);
-        recyclerView.setHasFixedSize(true);
-        fbtnAgregar = (FloatingActionButton) findViewById(R.id.agregarAlumno);
-
+        this.alumno = new Alumno();
+        this.posicion = -1;
+        this.app = (Aplicacion) getApplication();
         layoutManager = new LinearLayoutManager(this);
+        recyclerView = (RecyclerView) findViewById(R.id.recId);
+        recyclerView.setAdapter(app.getAdaptador());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        fbtnAgregar = findViewById(R.id.agregarAlumno);
 
         fbtnAgregar.setOnClickListener(v -> {
             alumno = null;
-            Intent intent = new Intent(MainActivity.this, AlumnoAltaActivity.class);
             Bundle bundle = new Bundle();
+            bundle.putSerializable("alumno", alumno);
             bundle.putInt("posicion", posicion);
+            Intent intent = new Intent(MainActivity.this, AlumnoAltaActivity.class);
             intent.putExtras(bundle);
 
             startActivityForResult(intent, 0);
@@ -50,12 +51,14 @@ public class MainActivity extends AppCompatActivity {
         app.getAdaptador().setOnClickListener(v -> {
             posicion = recyclerView.getChildAdapterPosition(v);
             alumno = app.getAlumnos().get(posicion);
-            Intent intent = new Intent(MainActivity.this, AlumnoAltaActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("alumno", alumno);
-            intent.putExtra("posicion", posicion);
+            bundle.putInt("posicion", posicion);
+
+            Intent intent = new Intent(MainActivity.this, AlumnoAltaActivity.class);
             intent.putExtras(bundle);
-            startActivityForResult(intent, 1);
+
+            startActivityForResult(intent, 0);
 
         });
 
@@ -64,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        posicion = -1;
+        recyclerView.getAdapter().notifyDataSetChanged();
+        this.posicion = -1;
+        this.alumno = null;
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         MenuItem menuItem = menu.findItem(R.id.menu_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Escriba");
+        searchView.setQueryHint("Escribe para buscar");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -82,10 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adaptadorAlumnos.getFilter().filter(newText);
-
-
-                return true;
+                app.getAdaptador().getFilter().filter(newText);
+                return false;
             }
         });
         return super.onCreateOptionsMenu(menu);

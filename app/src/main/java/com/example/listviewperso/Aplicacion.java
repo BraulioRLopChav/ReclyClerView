@@ -5,9 +5,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import com.example.listviewperso.Model.AlumnosDb;
+
 public class Aplicacion extends Application {
     public static ArrayList<Alumno> alumnos;
     public static AdapterAlumno adaptador;
+
+    static AlumnosDb alumnosDb;
 
     public ArrayList<Alumno> getAlumnos(){return alumnos;}
     public AdapterAlumno getAdaptador(){return adaptador;}
@@ -15,8 +19,13 @@ public class Aplicacion extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        alumnos = Alumno.llenarAlumnos();
+        alumnosDb = new AlumnosDb(getApplicationContext());
+        alumnos = alumnosDb.allAlumnos();
+        alumnosDb.openDataBase();
         adaptador = new AdapterAlumno(alumnos, this);
         Log.d("", "onCreate: tamaño array list " + alumnos.size());
+
+        //alumnos = Alumno.llenarAlumnos();
+
     }
 }
