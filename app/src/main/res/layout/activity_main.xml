@@ -9,29 +9,44 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/fondopantalla">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recId"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="#F3E6E6" />
+            android:id="@+id/recId"/>
     </LinearLayout>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTint="#ECE4E4">
-
+        >
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/agregarAlumno"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:backgroundTint="#FFFFFF"
             android:layout_margin="20dp"
-            android:backgroundTint="#99FFFFFF"
-            android:clickable="true"
-            android:pointerIcon="alias"
-            android:src="@drawable/agregar" />
+            android:elevation="3dp"
+            app:borderWidth="2dp"
+            app:backgroundTint="#FFFFFF"
+            android:src="@drawable/agregar"
+            android:id="@+id/agregarAlumno"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:backgroundTint="#FFFFFF"
+            android:layout_margin="20dp"
+            android:elevation="3dp"
+            app:borderWidth="2dp"
+            app:backgroundTint="#FFFFFF"
+            android:src="@drawable/salir2"
+            android:id="@+id/salirApp"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
